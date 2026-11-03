@@ -12,6 +12,19 @@ from urllib.request import Request, urlopen
 ROOT = Path(__file__).resolve().parent.parent
 API = "https://api.github.com/repos/tombang/rightkey/releases/latest"
 DOWNLOAD_PREFIX = "https://github.com/tombang/rightkey/releases/download/"
+# Keep local configuration and unrelated files out of the published site, even
+# when they exist in website/. Add new public assets explicitly here.
+PUBLIC_FILES = (
+    "index.html",
+    "404.html",
+    "styles.css",
+    "app.js",
+    "CNAME",
+    "robots.txt",
+    "sitemap.xml",
+    "assets/icon.svg",
+    "assets/social.png",
+)
 
 
 def release_metadata(data):
@@ -51,7 +64,14 @@ def main():
         raise ValueError("Website build directory must not be a symlink")
     if output.exists():
         shutil.rmtree(output)
-    shutil.copytree(ROOT / "website", output)
+    source_root = (ROOT / "website").resolve()
+    for relative_path in PUBLIC_FILES:
+        source = source_root / relative_path
+        if not source.resolve().is_relative_to(source_root):
+            raise ValueError(f"Public website file points outside website/: {relative_path}")
+        destination = output / relative_path
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(source, destination)
     (output / "release.js").write_text(
         "window.RIGHTKEY_RELEASE = " + json.dumps(metadata, ensure_ascii=False) + ";\n",
         encoding="utf-8",

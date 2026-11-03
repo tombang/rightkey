@@ -1,11 +1,54 @@
-.build/
-DerivedData/
-*.xcuserstate
-dist/*.app
+# macOS metadata
 .DS_Store
+.AppleDouble
+.LSOverride
 
-# Generated release artifacts are kept out of source control. Build them locally
-# with build_release.sh or let the release workflow publish them.
-dist/*.zip
-dist/*.zip.sha256
-dist/extension-entitlements.plist
+# Generated builds, test output, and release artifacts
+/.build/
+/build/
+/DerivedData/
+/dist/
+*.xcarchive/
+*.xcresult/
+__pycache__/
+*.py[cod]
+
+# Xcode and editor settings that belong to one developer
+xcuserdata/
+*.xcuserstate
+*.xccheckout
+*.xcscmblueprint
+/.idea/
+/.codex/
+.vscode/*.local.json
+
+# Machine-specific configuration; sanitized examples may be committed
+.env
+.env.*
+!.env.example
+!.env.*.example
+.envrc
+.direnv/
+*.local.*
+!*.local.example.*
+
+# Credentials and Apple signing material
+.netrc
+.npmrc
+.pypirc
+.aws/
+.ssh/
+*.pem
+*.key
+*.p8
+*.p12
+*.pfx
+*.mobileprovision
+*.provisionprofile
+*.keychain
+*.keychain-db
+AuthKey_*
+id_rsa
+id_rsa.*
+id_ed25519
+id_ed25519.*

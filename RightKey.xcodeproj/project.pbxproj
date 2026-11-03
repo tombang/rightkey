@@ -24,6 +24,7 @@
 		A10000000000000000000015 /* TemplateCreationDialog.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000015; };
 		A10000000000000000000016 /* HostFileRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000016; };
 		A10000000000000000000017 /* HostFileRequest.swift in FinderSync Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000016; };
+		A10000000000000000000018 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000017 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -57,6 +58,7 @@
 		A20000000000000000000014 /* TemplateLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateLibrary.swift; sourceTree = "<group>"; };
 		A20000000000000000000015 /* TemplateCreationDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateCreationDialog.swift; sourceTree = "<group>"; };
 		A20000000000000000000016 /* HostFileRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostFileRequest.swift; sourceTree = "<group>"; };
+		A20000000000000000000017 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,7 +68,7 @@
 
 /* Begin PBXGroup section */
 		A40000000000000000000001 = {isa = PBXGroup; children = (A40000000000000000000002 /* RightKey */, A40000000000000000000003 /* RightKeyFinderSync */, A40000000000000000000004 /* Products */); sourceTree = "<group>"; };
-		A40000000000000000000002 /* RightKey */ = {isa = PBXGroup; children = (A20000000000000000000001 /* RightKeyApp.swift */, A20000000000000000000002 /* ContentView.swift */, A20000000000000000000014 /* TemplateLibrary.swift */, A20000000000000000000015 /* TemplateCreationDialog.swift */, A40000000000000000000005 /* Shared */, A40000000000000000000006 /* RightKey Resources */, A20000000000000000000010 /* RightKey Info.plist */); path = RightKey; sourceTree = "<group>"; };
+		A40000000000000000000002 /* RightKey */ = {isa = PBXGroup; children = (A20000000000000000000001 /* RightKeyApp.swift */, A20000000000000000000002 /* ContentView.swift */, A20000000000000000000014 /* TemplateLibrary.swift */, A20000000000000000000015 /* TemplateCreationDialog.swift */, A40000000000000000000005 /* Shared */, A40000000000000000000006 /* RightKey Resources */, A20000000000000000000017 /* Assets.xcassets */, A20000000000000000000010 /* RightKey Info.plist */); path = RightKey; sourceTree = "<group>"; };
 		A40000000000000000000003 /* RightKeyFinderSync */ = {isa = PBXGroup; children = (A20000000000000000000005 /* FinderSync.swift */, A40000000000000000000007 /* FinderSync Resources */, A20000000000000000000008 /* RightKeyFinderSync Info.plist */); path = RightKeyFinderSync; sourceTree = "<group>"; };
 		A40000000000000000000004 /* Products */ = {isa = PBXGroup; children = (A20000000000000000000007 /* RightKey.app */, A20000000000000000000009 /* RightKeyFinderSync.appex */); name = Products; sourceTree = "<group>"; };
 		A40000000000000000000005 /* Shared */ = {isa = PBXGroup; children = (A20000000000000000000003 /* FileClipboard.swift */, A20000000000000000000004 /* FileOperations.swift */, A20000000000000000000013 /* FileTemplates.swift */, A20000000000000000000016 /* HostFileRequest.swift */); path = Shared; sourceTree = "<group>"; };
@@ -97,7 +99,7 @@
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
-		A30000000000000000000005 /* RightKey Resources */ = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (A10000000000000000000010 /* RightKey Keep.txt in Resources */,); runOnlyForDeploymentPostprocessing = 0; };
+		A30000000000000000000005 /* RightKey Resources */ = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (A10000000000000000000010 /* RightKey Keep.txt in Resources */, A10000000000000000000018 /* Assets.xcassets in Resources */,); runOnlyForDeploymentPostprocessing = 0; };
 		A30000000000000000000007 /* FinderSync Resources */ = {isa = PBXResourcesBuildPhase; buildActionMask = 2147483647; files = (A10000000000000000000011 /* FinderSync Keep.txt in Resources */,); runOnlyForDeploymentPostprocessing = 0; };
 /* End PBXResourcesBuildPhase section */
 
@@ -117,8 +119,8 @@
 /* Begin XCBuildConfiguration section */
 		A90000000000000000000001 /* Debug */ = {isa = XCBuildConfiguration; buildSettings = { ALWAYS_SEARCH_USER_PATHS = NO; CLANG_ENABLE_MODULES = YES; CLANG_ENABLE_OBJC_ARC = YES; CODE_SIGN_IDENTITY = "-"; CODE_SIGN_STYLE = Manual; MACOSX_DEPLOYMENT_TARGET = 13.0; SWIFT_VERSION = 5.0; }; name = Debug; };
 		A90000000000000000000002 /* Release */ = {isa = XCBuildConfiguration; buildSettings = { ALWAYS_SEARCH_USER_PATHS = NO; CLANG_ENABLE_MODULES = YES; CLANG_ENABLE_OBJC_ARC = YES; CODE_SIGN_IDENTITY = "-"; CODE_SIGN_STYLE = Manual; MACOSX_DEPLOYMENT_TARGET = 13.0; SWIFT_VERSION = 5.0; }; name = Release; };
-		A90000000000000000000003 /* RightKey Debug */ = {isa = XCBuildConfiguration; buildSettings = { CODE_SIGN_IDENTITY = "-"; INFOPLIST_FILE = RightKey/Info.plist; LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/../Frameworks"); PRODUCT_BUNDLE_IDENTIFIER = com.rightkey.app; PRODUCT_NAME = RightKey; SWIFT_EMIT_LOC_STRINGS = YES; }; name = Debug; };
-		A90000000000000000000004 /* RightKey Release */ = {isa = XCBuildConfiguration; buildSettings = { CODE_SIGN_IDENTITY = "-"; INFOPLIST_FILE = RightKey/Info.plist; LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/../Frameworks"); PRODUCT_BUNDLE_IDENTIFIER = com.rightkey.app; PRODUCT_NAME = RightKey; SWIFT_EMIT_LOC_STRINGS = YES; }; name = Release; };
+		A90000000000000000000003 /* RightKey Debug */ = {isa = XCBuildConfiguration; buildSettings = { ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon; CODE_SIGN_IDENTITY = "-"; INFOPLIST_FILE = RightKey/Info.plist; LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/../Frameworks"); PRODUCT_BUNDLE_IDENTIFIER = com.rightkey.app; PRODUCT_NAME = RightKey; SWIFT_EMIT_LOC_STRINGS = YES; }; name = Debug; };
+		A90000000000000000000004 /* RightKey Release */ = {isa = XCBuildConfiguration; buildSettings = { ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon; CODE_SIGN_IDENTITY = "-"; INFOPLIST_FILE = RightKey/Info.plist; LD_RUNPATH_SEARCH_PATHS = ("$(inherited)", "@executable_path/../Frameworks"); PRODUCT_BUNDLE_IDENTIFIER = com.rightkey.app; PRODUCT_NAME = RightKey; SWIFT_EMIT_LOC_STRINGS = YES; }; name = Release; };
 		A90000000000000000000005 /* FinderSync Debug */ = {isa = XCBuildConfiguration; buildSettings = { CODE_SIGN_IDENTITY = "-"; CODE_SIGN_ENTITLEMENTS = RightKeyFinderSync/RightKeyFinderSync.entitlements; ENABLE_APP_SANDBOX = YES; ENABLE_USER_SELECTED_FILES = readwrite; INFOPLIST_FILE = RightKeyFinderSync/Info.plist; PRODUCT_BUNDLE_IDENTIFIER = com.rightkey.app.findersync; PRODUCT_NAME = RightKeyFinderSync; SKIP_INSTALL = YES; SWIFT_EMIT_LOC_STRINGS = YES; }; name = Debug; };
 		A90000000000000000000006 /* FinderSync Release */ = {isa = XCBuildConfiguration; buildSettings = { CODE_SIGN_IDENTITY = "-"; CODE_SIGN_ENTITLEMENTS = RightKeyFinderSync/RightKeyFinderSync.entitlements; ENABLE_APP_SANDBOX = YES; ENABLE_USER_SELECTED_FILES = readwrite; INFOPLIST_FILE = RightKeyFinderSync/Info.plist; PRODUCT_BUNDLE_IDENTIFIER = com.rightkey.app.findersync; PRODUCT_NAME = RightKeyFinderSync; SKIP_INSTALL = YES; SWIFT_EMIT_LOC_STRINGS = YES; }; name = Release; };
 /* End XCBuildConfiguration section */
