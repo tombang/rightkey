@@ -38,3 +38,16 @@ Changes to Finder menu behavior should also be checked manually with a local tes
 ## Release process
 
 Releases are created by GitHub Actions when a `v*` tag is pushed. The workflow verifies that the tag matches the app's bundle version, builds a universal Release artifact, and publishes the ZIP and SHA-256 file.
+
+## Website
+
+The product website at https://rightkey.bot.cd is a static site in `website/`, with no frontend dependencies. To preview it locally:
+
+```sh
+python3 scripts/build_website.py
+python3 -m http.server 8000 --directory .build/website
+```
+
+Open http://localhost:8000. The build reads the latest public GitHub Release and generates download links at build time. The committed `website/release.js` also allows direct, offline previews of the source directory. The Finder illustration is an interactive web demo and never accesses local files or the clipboard.
+
+The `Website` workflow deploys changes on `main` to GitHub Pages. The release workflow also requests a website deployment after publishing a release so download links stay current. The repository's Pages source is **GitHub Actions**, with **rightkey.bot.cd** configured as its custom domain. Its DNS CNAME points to **tombang.github.io**.

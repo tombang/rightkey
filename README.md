@@ -2,6 +2,8 @@
 
 RightKey is a macOS Finder extension that adds practical file actions for users who prefer a Windows-style context menu. It keeps the workflow inside Finder and provides a small companion app for settings and templates.
 
+[Website](https://rightkey.bot.cd/) · [Download](https://github.com/tombang/rightkey/releases/latest) · [Report an issue](https://github.com/tombang/rightkey/issues)
+
 ## Features
 
 - Create folders and files from built-in templates: TXT, Markdown, JSON, Python, HTML, and CSV.
