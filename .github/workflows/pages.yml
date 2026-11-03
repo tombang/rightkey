@@ -19,7 +19,23 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  refresh-after-release:
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      actions: write
+    steps:
+      # Release events run on a tag. Keep Pages deployment on main so the
+      # existing github-pages environment protection continues to apply.
+      - name: Refresh website from main
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: gh workflow run pages.yml --ref main
+
   deploy:
+    if: github.event_name != 'release'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     permissions:
