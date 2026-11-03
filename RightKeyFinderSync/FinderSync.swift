@@ -34,18 +34,18 @@ final class FinderSync: FIFinderSync {
         }
 
         if !container && !selected.isEmpty {
-            menu.addItem(item("RightKey 复制", action: #selector(copyItems)))
-            menu.addItem(item("RightKey 剪切", action: #selector(cutItems)))
-            menu.addItem(item("RightKey 复制路径", action: #selector(copyPaths)))
+            menu.addItem(item("复制", action: #selector(copyItems)))
+            menu.addItem(item("剪切", action: #selector(cutItems)))
+            menu.addItem(item("复制路径", action: #selector(copyPaths)))
             menu.addItem(.separator())
         }
 
         let clipboard = RightKeyClipboard.snapshot()
         let pasteTitle: String
         if clipboard.cutting {
-            pasteTitle = container ? "RightKey 粘贴（移动剪切项）" : "RightKey 粘贴到此处（移动剪切项）"
+            pasteTitle = container ? "粘贴（移动剪切项）" : "粘贴到此处（移动剪切项）"
         } else {
-            pasteTitle = container ? "RightKey 粘贴（复制）" : "RightKey 粘贴到此处（复制）"
+            pasteTitle = container ? "粘贴（复制）" : "粘贴到此处（复制）"
         }
         let paste = item(pasteTitle, action: #selector(pasteItems), tag: contextTag)
         paste.isEnabled = !clipboard.urls.isEmpty
