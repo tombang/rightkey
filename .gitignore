@@ -1,0 +1,11 @@
+.build/
+DerivedData/
+*.xcuserstate
+dist/*.app
+.DS_Store
+
+# Generated release artifacts are kept out of source control. Build them locally
+# with build_release.sh or let the release workflow publish them.
+dist/*.zip
+dist/*.zip.sha256
+dist/extension-entitlements.plist

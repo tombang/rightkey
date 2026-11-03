@@ -1,0 +1,110 @@
+name: RightKey Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: macos-15
+    timeout-minutes: 45
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Show toolchain
+        run: xcodebuild -version
+
+      - name: Build release app
+        run: |
+          set -euo pipefail
+          xcodebuild \
+            -project RightKey.xcodeproj \
+            -scheme RightKey \
+            -configuration Release \
+            -derivedDataPath .build/DerivedData \
+            -destination 'platform=macOS' \
+            ARCHS="arm64 x86_64" \
+            ONLY_ACTIVE_ARCH=NO \
+            CODE_SIGNING_ALLOWED=NO \
+            build
+
+      - name: Package and validate release
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          tag_version="${GITHUB_REF_NAME#v}"
+          app_path=".build/DerivedData/Build/Products/Release/RightKey.app"
+          info_plist="$app_path/Contents/Info.plist"
+
+          test -d "$app_path"
+          app_version=$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$info_plist")
+          if [[ "$app_version" != "$tag_version" ]]; then
+            echo "Tag v${tag_version} does not match app version ${app_version}" >&2
+            exit 1
+          fi
+
+          mkdir -p dist
+          zip_path="dist/RightKey-${app_version}.zip"
+          ditto -c -k --sequesterRsrc --keepParent "$app_path" "$zip_path"
+          (
+            cd dist
+            shasum -a 256 "RightKey-${app_version}.zip" > "RightKey-${app_version}.zip.sha256"
+          )
+
+          printf 'RELEASE_VERSION=%s\nRELEASE_ZIP=RightKey-%s.zip\n' "$app_version" "$app_version" >> "$GITHUB_ENV"
+
+      - name: Upload workflow artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: RightKey-${{ env.RELEASE_VERSION }}
+          path: |
+            dist/RightKey-${{ env.RELEASE_VERSION }}.zip
+            dist/RightKey-${{ env.RELEASE_VERSION }}.zip.sha256
+
+      - name: Create or update GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          tag="$GITHUB_REF_NAME"
+          zip_name="RightKey-${RELEASE_VERSION}.zip"
+          checksum_name="${zip_name}.sha256"
+          notes_file="release-notes.md"
+
+          cat > "$notes_file" <<EOF
+          ## RightKey ${RELEASE_VERSION}
+
+          macOS Finder extension release for RightKey.
+
+          ### Included
+
+          - Universal macOS application bundle (Apple Silicon and Intel)
+          - SHA-256 checksum for the release archive
+
+          ### Installation
+
+          See the repository README for Finder extension setup and macOS file access permissions.
+          EOF
+
+          if gh release view "$tag" >/dev/null 2>&1; then
+            while IFS=$'\t' read -r asset_name _; do
+              case "$asset_name" in
+                "$zip_name"|"$checksum_name"|"") continue ;;
+                *) gh release delete-asset "$tag" "$asset_name" --yes ;;
+              esac
+            done < <(gh release view "$tag" --json assets --jq '.assets[] | [.name, .id] | @tsv')
+            gh release edit "$tag" --title "RightKey ${RELEASE_VERSION}" --notes-file "$notes_file"
+          else
+            gh release create "$tag" --title "RightKey ${RELEASE_VERSION}" --notes-file "$notes_file"
+          fi
+
+          gh release upload "$tag" "dist/$zip_name" "dist/$checksum_name" --clobber
