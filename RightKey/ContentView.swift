@@ -44,7 +44,7 @@ struct ContentView: View {
             VStack(alignment: .leading, spacing: 8) {
                 Label("新建文件夹、从内置或自定义模板新建文件", systemImage: "folder.badge.plus")
                 Label("复制、剪切、粘贴和移动文件/文件夹", systemImage: "doc.on.doc")
-                Label("复制完整路径、在终端打开当前目录", systemImage: "terminal")
+                Label("复制完整路径、选择已安装的终端打开当前目录", systemImage: "terminal")
             }
             .padding(.vertical, 4)
 

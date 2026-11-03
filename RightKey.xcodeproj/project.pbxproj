@@ -25,6 +25,8 @@
 		A10000000000000000000016 /* HostFileRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000016; };
 		A10000000000000000000017 /* HostFileRequest.swift in FinderSync Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000016; };
 		A10000000000000000000018 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000017 /* Assets.xcassets */; };
+		A10000000000000000000019 /* TerminalApplication.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000018 /* TerminalApplication.swift */; };
+		A10000000000000000000020 /* TerminalApplication.swift in FinderSync Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000018 /* TerminalApplication.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -59,6 +61,7 @@
 		A20000000000000000000015 /* TemplateCreationDialog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TemplateCreationDialog.swift; sourceTree = "<group>"; };
 		A20000000000000000000016 /* HostFileRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HostFileRequest.swift; sourceTree = "<group>"; };
 		A20000000000000000000017 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		A20000000000000000000018 /* TerminalApplication.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TerminalApplication.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,7 +74,7 @@
 		A40000000000000000000002 /* RightKey */ = {isa = PBXGroup; children = (A20000000000000000000001 /* RightKeyApp.swift */, A20000000000000000000002 /* ContentView.swift */, A20000000000000000000014 /* TemplateLibrary.swift */, A20000000000000000000015 /* TemplateCreationDialog.swift */, A40000000000000000000005 /* Shared */, A40000000000000000000006 /* RightKey Resources */, A20000000000000000000017 /* Assets.xcassets */, A20000000000000000000010 /* RightKey Info.plist */); path = RightKey; sourceTree = "<group>"; };
 		A40000000000000000000003 /* RightKeyFinderSync */ = {isa = PBXGroup; children = (A20000000000000000000005 /* FinderSync.swift */, A40000000000000000000007 /* FinderSync Resources */, A20000000000000000000008 /* RightKeyFinderSync Info.plist */); path = RightKeyFinderSync; sourceTree = "<group>"; };
 		A40000000000000000000004 /* Products */ = {isa = PBXGroup; children = (A20000000000000000000007 /* RightKey.app */, A20000000000000000000009 /* RightKeyFinderSync.appex */); name = Products; sourceTree = "<group>"; };
-		A40000000000000000000005 /* Shared */ = {isa = PBXGroup; children = (A20000000000000000000003 /* FileClipboard.swift */, A20000000000000000000004 /* FileOperations.swift */, A20000000000000000000013 /* FileTemplates.swift */, A20000000000000000000016 /* HostFileRequest.swift */); path = Shared; sourceTree = "<group>"; };
+		A40000000000000000000005 /* Shared */ = {isa = PBXGroup; children = (A20000000000000000000003 /* FileClipboard.swift */, A20000000000000000000004 /* FileOperations.swift */, A20000000000000000000013 /* FileTemplates.swift */, A20000000000000000000016 /* HostFileRequest.swift */, A20000000000000000000018 /* TerminalApplication.swift */); path = Shared; sourceTree = "<group>"; };
 		A40000000000000000000006 /* RightKey Resources */ = {isa = PBXGroup; children = (A20000000000000000000011 /* RightKey Keep.txt */); path = Resources; sourceTree = "<group>"; };
 		A40000000000000000000007 /* FinderSync Resources */ = {isa = PBXGroup; children = (A20000000000000000000012 /* FinderSync Keep.txt */); path = Resources; sourceTree = "<group>"; };
 /* End PBXGroup section */
@@ -104,8 +107,8 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		A30000000000000000000004 /* RightKey Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (A10000000000000000000001 /* RightKeyApp.swift in Sources */, A10000000000000000000002 /* ContentView.swift in Sources */, A10000000000000000000003 /* FileClipboard.swift in Sources */, A10000000000000000000004 /* FileOperations.swift in Sources */, A10000000000000000000012, A10000000000000000000014, A10000000000000000000015, A10000000000000000000016); runOnlyForDeploymentPostprocessing = 0; };
-		A30000000000000000000006 /* FinderSync Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (A10000000000000000000005 /* FinderSync.swift in Sources */, A10000000000000000000007 /* FileClipboard.swift in FinderSync Sources */, A10000000000000000000008 /* FileOperations.swift in FinderSync Sources */, A10000000000000000000013, A10000000000000000000017); runOnlyForDeploymentPostprocessing = 0; };
+		A30000000000000000000004 /* RightKey Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (A10000000000000000000001 /* RightKeyApp.swift in Sources */, A10000000000000000000002 /* ContentView.swift in Sources */, A10000000000000000000003 /* FileClipboard.swift in Sources */, A10000000000000000000004 /* FileOperations.swift in Sources */, A10000000000000000000012, A10000000000000000000014, A10000000000000000000015, A10000000000000000000016, A10000000000000000000019); runOnlyForDeploymentPostprocessing = 0; };
+		A30000000000000000000006 /* FinderSync Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (A10000000000000000000005 /* FinderSync.swift in Sources */, A10000000000000000000007 /* FileClipboard.swift in FinderSync Sources */, A10000000000000000000008 /* FileOperations.swift in FinderSync Sources */, A10000000000000000000013, A10000000000000000000017, A10000000000000000000020); runOnlyForDeploymentPostprocessing = 0; };
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */

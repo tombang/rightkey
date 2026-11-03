@@ -172,11 +172,8 @@ final class RightKeyAppDelegate: NSObject, NSApplicationDelegate, NSWindowDelega
             }.value
             NSWorkspace.shared.activateFileViewerSelecting([created])
         case .openTerminal:
-            try RightKeyFileOperations.validateDirectory(request.directory)
-            guard let terminal = NSWorkspace.shared.urlForApplication(withBundleIdentifier: "com.apple.Terminal") else { throw CocoaError(.fileNoSuchFile) }
-            NSWorkspace.shared.open([request.directory], withApplicationAt: terminal, configuration: NSWorkspace.OpenConfiguration()) { _, error in
-                if let error { DispatchQueue.main.async { self.showError(error.localizedDescription) } }
-            }
+            logger.notice("Opening terminal \(request.terminalBundleIdentifier ?? TerminalApplication.terminal.rawValue, privacy: .public)")
+            try await TerminalApplication.open(directory: request.directory, bundleIdentifier: request.terminalBundleIdentifier)
         }
     }
 

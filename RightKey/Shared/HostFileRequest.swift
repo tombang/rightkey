@@ -7,16 +7,18 @@ struct HostFileRequest: Codable {
     var clipboardChangeCount: Int?
     var clipboardCutting: Bool?
     var sources: [URL]
+    var terminalBundleIdentifier: String?
     private var createdAt = Date()
 
     private static let dataType = NSPasteboard.PasteboardType("com.rightkey.file-request")
 
-    init(action: Action, directory: URL, clipboardChangeCount: Int? = nil, clipboardCutting: Bool? = nil, sources: [URL] = []) {
+    init(action: Action, directory: URL, clipboardChangeCount: Int? = nil, clipboardCutting: Bool? = nil, sources: [URL] = [], terminalBundleIdentifier: String? = nil) {
         self.action = action
         self.directory = directory
         self.clipboardChangeCount = clipboardChangeCount
         self.clipboardCutting = clipboardCutting
         self.sources = sources
+        self.terminalBundleIdentifier = terminalBundleIdentifier
     }
 
     /// One-use tokens keep raw paths out of URLs and prevent a webpage from
@@ -42,6 +44,9 @@ struct HostFileRequest: Codable {
         guard Date().timeIntervalSince(request.createdAt) >= -5,
               Date().timeIntervalSince(request.createdAt) <= 120,
               request.directory.isFileURL, request.sources.allSatisfy(\.isFileURL) else { throw HostRequestError.invalidOrExpired }
+        if let identifier = request.terminalBundleIdentifier {
+            guard request.action == .openTerminal, TerminalApplication(rawValue: identifier) != nil else { throw HostRequestError.invalidOrExpired }
+        }
         return request
     }
 }

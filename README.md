@@ -11,7 +11,7 @@ RightKey is a macOS Finder extension that adds practical file actions for users 
 - Copy, cut, and paste files and folders from Finder's context menu.
 - Move files by choosing **剪切** and then **粘贴（移动剪切项）** in the destination folder.
 - Copy one or more absolute file paths.
-- Open the current Finder directory in Terminal.
+- Open the current Finder directory in Terminal, or choose another installed terminal: iTerm2, Ghostty, Warp, WezTerm, kitty, or Alacritty.
 - Avoid overwriting existing files by automatically selecting a numbered name.
 
 File operations are handled by the host app so the Finder extension can remain sandboxed. Cut items are removed only after a successful move; failed items remain available for retry.
@@ -66,6 +66,8 @@ Finder's native **复制**, **粘贴项目**, and **⌘V** remain available. Use
 
 Template data is stored locally at `~/Library/Application Support/RightKey/Templates.json`. It is not included in source archives or release artifacts.
 
+To choose a terminal, right-click an empty area in the destination directory and select **使用其他终端打开 → iTerm2** (or another installed terminal). **在终端打开** continues to use macOS Terminal. The submenu appears only when another supported terminal is installed; its choices refresh whenever the menu opens. Right-clicking a folder opens that folder, while right-clicking a file uses its parent directory. See [terminal support](docs/terminals.md) for details.
+
 ## Testing
 
 Run the focused regression suites from the repository root:
@@ -75,7 +77,7 @@ Run the focused regression suites from the repository root:
 /bin/zsh scripts/test_templates.sh
 ```
 
-The file-action suite covers native clipboard handling, copy and move operations, collisions, partial failures, directory recursion, and request validation. The template suite covers built-in templates, validation, persistence, binary imports, and concurrent creation.
+The file-action suite covers native clipboard handling, copy and move operations, collisions, partial failures, directory recursion, request validation, terminal detection, and safe directory transport. The template suite covers built-in templates, validation, persistence, binary imports, and concurrent creation.
 
 ## Architecture
 

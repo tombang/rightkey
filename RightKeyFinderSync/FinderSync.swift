@@ -54,7 +54,20 @@ final class FinderSync: FIFinderSync {
             menu.addItem(item("移动到这里", action: #selector(pasteItems), tag: contextTag))
         }
         menu.addItem(.separator())
-        menu.addItem(item("在终端打开", action: #selector(openInTerminal), tag: contextTag))
+        menu.addItem(item("在终端打开", action: #selector(openInTerminal),
+                          tag: TerminalMenuSelection(terminal: .terminal, contextTag: contextTag).menuTag))
+        let otherTerminals = TerminalApplication.installed().filter { $0 != .terminal }
+        if !otherTerminals.isEmpty {
+            let choices = NSMenu(title: "使用其他终端打开")
+            for terminal in otherTerminals {
+                let entry = item(terminal.name, action: #selector(openInTerminal),
+                                 tag: TerminalMenuSelection(terminal: terminal, contextTag: contextTag).menuTag)
+                choices.addItem(entry)
+            }
+            let parent = NSMenuItem(title: choices.title, action: nil, keyEquivalent: "")
+            parent.submenu = choices
+            menu.addItem(parent)
+        }
         return menu
     }
 
@@ -87,7 +100,11 @@ final class FinderSync: FIFinderSync {
     }
 
     @objc private func openInTerminal(_ sender: NSMenuItem) {
-        runAction { try sendToHost(HostFileRequest(action: .openTerminal, directory: destinationDirectory(contextTag: sender.tag))) }
+        runAction {
+            guard let selection = TerminalMenuSelection(menuTag: sender.tag) else { throw TerminalError.unsupported }
+            try sendToHost(HostFileRequest(action: .openTerminal, directory: destinationDirectory(contextTag: selection.contextTag),
+                                          terminalBundleIdentifier: selection.terminal.rawValue))
+        }
     }
 
     @objc private func newFromTemplate(_ sender: NSMenuItem) {
