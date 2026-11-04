@@ -54,6 +54,8 @@ final class FinderSync: FIFinderSync {
             menu.addItem(item("移动到这里", action: #selector(pasteItems), tag: contextTag))
         }
         menu.addItem(.separator())
+        menu.addItem(item("跳转到文件…", action: #selector(jumpToFile)))
+        menu.addItem(.separator())
         menu.addItem(item("在终端打开", action: #selector(openInTerminal),
                           tag: TerminalMenuSelection(terminal: .terminal, contextTag: contextTag).menuTag))
         let otherTerminals = TerminalApplication.installed().filter { $0 != .terminal }
@@ -104,6 +106,12 @@ final class FinderSync: FIFinderSync {
             guard let selection = TerminalMenuSelection(menuTag: sender.tag) else { throw TerminalError.unsupported }
             try sendToHost(HostFileRequest(action: .openTerminal, directory: destinationDirectory(contextTag: selection.contextTag),
                                           terminalBundleIdentifier: selection.terminal.rawValue))
+        }
+    }
+
+    @objc private func jumpToFile(_ sender: NSMenuItem) {
+        runAction {
+            try sendToHost(HostFileRequest(action: .jumpToFile, directory: URL(fileURLWithPath: "/")))
         }
     }
 

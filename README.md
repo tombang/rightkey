@@ -11,6 +11,7 @@ RightKey is a macOS Finder extension that adds practical file actions for users 
 - Copy, cut, and paste files and folders from Finder's context menu.
 - Move files by choosing **剪切** and then **粘贴（移动剪切项）** in the destination folder.
 - Copy one or more absolute file paths.
+- Jump to a file or folder by entering its path from Finder's context menu.
 - Open the current Finder directory in Terminal, or choose another installed terminal: iTerm2, Ghostty, Warp, WezTerm, kitty, or Alacritty.
 - Avoid overwriting existing files by automatically selecting a numbered name.
 
@@ -63,6 +64,8 @@ In Finder, right-click a file, folder, or empty area and choose a RightKey actio
 3. Choose **粘贴（移动剪切项）** or **移动到这里**.
 
 Finder's native **复制**, **粘贴项目**, and **⌘V** remain available. Use the file-operation items supplied by this extension when you need its clipboard or move behavior. Copy and cut operate on the complete current selection.
+
+Choose **跳转到文件…** to enter an absolute path or a path beginning with `~`. A folder opens in Finder; a file is selected in its containing folder. Paths are checked locally before Finder is changed.
 
 Template data is stored locally at `~/Library/Application Support/RightKey/Templates.json`. It is not included in source archives or release artifacts.
 

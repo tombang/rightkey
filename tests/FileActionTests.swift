@@ -131,6 +131,7 @@ enum FileActionTests {
         do { _ = try HostFileRequest.consume(url) } catch { replayRejected = true }
         try check(replayRejected, "request must be single-use")
         try TerminalTests.run(directory: target)
+        try PathJumpTests.run()
         print("PASS: native clipboard across processes, unavailable-source rejection, orphan-marker rejection, copy paths, multi-file copy/move, collision, partial failure, clipboard replacement, directory recursion, new folder, single-use host request")
     }
 }

@@ -1,7 +1,7 @@
 import AppKit
 
 struct HostFileRequest: Codable {
-    enum Action: String, Codable { case copy, cut, copyPaths, paste, createFolder, openTerminal }
+    enum Action: String, Codable { case copy, cut, copyPaths, paste, createFolder, openTerminal, jumpToFile }
     let action: Action
     let directory: URL
     var clipboardChangeCount: Int?

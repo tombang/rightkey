@@ -174,6 +174,41 @@ final class RightKeyAppDelegate: NSObject, NSApplicationDelegate, NSWindowDelega
         case .openTerminal:
             logger.notice("Opening terminal \(request.terminalBundleIdentifier ?? TerminalApplication.terminal.rawValue, privacy: .public)")
             try await TerminalApplication.open(directory: request.directory, bundleIdentifier: request.terminalBundleIdentifier)
+        case .jumpToFile:
+            jumpToFile()
+        }
+    }
+
+    private func jumpToFile() {
+        NSApp.activate(ignoringOtherApps: true)
+        let alert = NSAlert()
+        alert.messageText = "跳转到文件或文件夹"
+        alert.informativeText = "输入完整路径，也可以使用 ~ 开头的路径。"
+        alert.addButton(withTitle: "跳转")
+        alert.addButton(withTitle: "取消")
+        let field = NSTextField(string: "")
+        field.placeholderString = "/Users/… 或 ~/Documents"
+        field.frame = NSRect(x: 0, y: 0, width: 420, height: 26)
+        field.setAccessibilityLabel("文件或文件夹路径")
+        alert.accessoryView = field
+        alert.window.initialFirstResponder = field
+        while alert.runModal() == .alertFirstButtonReturn {
+            do {
+                let target = try PathJump.resolve(field.stringValue)
+                let isDirectory = try target.resourceValues(forKeys: [.isDirectoryKey]).isDirectory == true
+                if isDirectory {
+                    guard NSWorkspace.shared.open(target) else { throw CocoaError(.fileNoSuchFile) }
+                } else {
+                    NSWorkspace.shared.activateFileViewerSelecting([target])
+                }
+                return
+            } catch {
+                let failure = NSAlert()
+                failure.messageText = "无法跳转"
+                failure.informativeText = error.localizedDescription
+                failure.addButton(withTitle: "好")
+                failure.runModal()
+            }
         }
     }
 
