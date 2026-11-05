@@ -45,6 +45,7 @@ struct ContentView: View {
                 Label("新建文件夹、从内置或自定义模板新建文件", systemImage: "folder.badge.plus")
                 Label("复制、剪切、粘贴和移动文件/文件夹", systemImage: "doc.on.doc")
                 Label("复制完整路径、选择已安装的终端打开当前目录", systemImage: "terminal")
+                Label("压缩 ZIP、7Z、TAR/GZ/XZ/ZST，解压 RAR 等常见格式", systemImage: "archivebox")
             }
             .padding(.vertical, 4)
 
@@ -70,7 +71,7 @@ struct ContentView: View {
                 .font(.footnote)
                 .foregroundStyle(.secondary)
 
-            Text("剪切后，请选择「RightKey 粘贴（移动剪切项）」或「移动到这里」。Finder 自带「粘贴项目」和 ⌘V 会复制，源文件会保留。")
+            Text("剪切后，请选择「粘贴（移动剪切项）」或「移动到这里」。Finder 自带「粘贴项目」和 ⌘V 会复制，源文件会保留。")
                 .font(.footnote)
                 .foregroundStyle(.secondary)
         }

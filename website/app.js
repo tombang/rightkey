@@ -114,6 +114,8 @@
         notify("路径示例：/Users/you/Projects/灵感笔记.md（未修改你的剪贴板）");
       if (action === "terminal")
         notify("实际使用时可选择已安装的终端，或输入路径直接跳转到文件和文件夹。");
+      if (action === "archive")
+        notify("压缩格式：ZIP、7Z、TAR.GZ、TAR.XZ、TAR.ZST；选中压缩包后也可以解压到此处。");
     });
   });
   function uniqueNoteName() {

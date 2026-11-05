@@ -24,16 +24,9 @@ jobs:
       - name: Build release app
         run: |
           set -euo pipefail
-          xcodebuild \
-            -project RightKey.xcodeproj \
-            -scheme RightKey \
-            -configuration Release \
-            -derivedDataPath .build/DerivedData \
-            -destination 'platform=macOS' \
-            ARCHS="arm64 x86_64" \
-            ONLY_ACTIVE_ARCH=NO \
-            CODE_SIGNING_ALLOWED=NO \
-            build
+          /bin/zsh scripts/test_archives.sh
+          /bin/zsh scripts/test_templates.sh
+          ./build_release.sh
 
       - name: Package and validate release
         shell: bash

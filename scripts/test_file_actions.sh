@@ -5,6 +5,7 @@ mkdir -p "$ROOT_DIR/.build/tests"
 swiftc "$ROOT_DIR/RightKey/Shared/FileClipboard.swift" \
   "$ROOT_DIR/RightKey/Shared/FileOperations.swift" \
   "$ROOT_DIR/RightKey/Shared/FileTemplates.swift" \
+  "$ROOT_DIR/RightKey/Shared/ArchiveFormat.swift" \
   "$ROOT_DIR/RightKey/Shared/HostFileRequest.swift" \
   "$ROOT_DIR/RightKey/Shared/TerminalApplication.swift" \
   "$ROOT_DIR/RightKey/Shared/PathJump.swift" \

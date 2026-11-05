@@ -7,7 +7,7 @@
     <title>RightKey — 让 Mac 的每一次右键，都更顺手</title>
     <meta
       name="description"
-      content="RightKey 是免费开源的 macOS Finder 右键菜单扩展。新建文件、模板、复制、剪切、粘贴、复制路径、终端打开，让文件操作更顺手。支持 Apple Silicon 和 Intel Mac。"
+      content="RightKey 是免费开源的 macOS Finder 右键菜单扩展。新建文件、模板、复制、剪切、粘贴、压缩解压、复制路径、终端打开，让文件操作更顺手。支持 Apple Silicon 和 Intel Mac。"
     />
     <link rel="canonical" href="https://rightkey.bot.cd/" />
     <meta property="og:type" content="website" />
@@ -88,7 +88,7 @@
             >
           </div>
           <p class="requirements">
-            <span data-version>v1.2.0</span><span>macOS 13+</span
+            <span data-version>v1.3.0</span><span>macOS 13+</span
             ><span>Apple Silicon &amp; Intel</span>
           </p>
           <a class="release-note" href="#compatibility"
@@ -160,6 +160,9 @@
                   ><button type="button" data-demo="terminal">
                     <span class="menu-icon terminal-symbol">&gt;_</span
                     >在终端打开
+                  </button>
+                  <button type="button" data-demo="archive">
+                    <span class="menu-icon">▣</span>压缩 / 解压
                   </button>
                 </div>
                 <div class="template-menu" id="template-menu" hidden>
@@ -273,6 +276,20 @@
             </p>
             <div class="terminal-line">
               <span>➜</span> <span>RightKey</span> <i>git:(main)</i> <b>▍</b>
+            </div>
+          </article>
+          <article class="feature-card feature-archive">
+            <div class="card-top">
+              <span class="card-icon">▣</span
+              ><span class="card-number">05 / ARCHIVE</span>
+            </div>
+            <h3>压缩解压，右键完成。</h3>
+            <p>
+              创建 ZIP、7Z、TAR/GZ/XZ/ZST，解压 RAR 和其他常见格式。引擎随应用提供，无需另装 Homebrew。
+            </p>
+            <div class="file-chips" aria-label="归档格式">
+              <span>ZIP</span><span>7Z</span><span>RAR</span><span>TAR</span
+              ><span>ZST</span>
             </div>
           </article>
         </div>
@@ -497,7 +514,7 @@
               <path d="M12 3v12m-5-5 5 5 5-5M5 16v4h14v-4" /></svg
             >免费下载 Mac 版<span aria-hidden="true">↗</span></a
           ><span class="download-detail"
-            ><span data-version>v1.2.0</span> · macOS 13+ · 免费开源</span
+            ><span data-version>v1.3.0</span> · macOS 13+ · 免费开源</span
           ><a
             class="checksum-link"
             data-checksum

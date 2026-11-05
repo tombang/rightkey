@@ -1,24 +1,28 @@
 import AppKit
 
 struct HostFileRequest: Codable {
-    enum Action: String, Codable { case copy, cut, copyPaths, paste, createFolder, openTerminal, jumpToFile }
+    enum Action: String, Codable { case copy, cut, copyPaths, paste, createFolder, openTerminal, jumpToFile, createArchive, extractArchive }
     let action: Action
     let directory: URL
     var clipboardChangeCount: Int?
     var clipboardCutting: Bool?
     var sources: [URL]
     var terminalBundleIdentifier: String?
+    var archiveFormat: ArchiveFormat?
+    var extractIntoNewFolder: Bool?
     private var createdAt = Date()
 
     private static let dataType = NSPasteboard.PasteboardType("com.rightkey.file-request")
 
-    init(action: Action, directory: URL, clipboardChangeCount: Int? = nil, clipboardCutting: Bool? = nil, sources: [URL] = [], terminalBundleIdentifier: String? = nil) {
+    init(action: Action, directory: URL, clipboardChangeCount: Int? = nil, clipboardCutting: Bool? = nil, sources: [URL] = [], terminalBundleIdentifier: String? = nil, archiveFormat: ArchiveFormat? = nil, extractIntoNewFolder: Bool? = nil) {
         self.action = action
         self.directory = directory
         self.clipboardChangeCount = clipboardChangeCount
         self.clipboardCutting = clipboardCutting
         self.sources = sources
         self.terminalBundleIdentifier = terminalBundleIdentifier
+        self.archiveFormat = archiveFormat
+        self.extractIntoNewFolder = extractIntoNewFolder
     }
 
     /// One-use tokens keep raw paths out of URLs and prevent a webpage from
@@ -46,6 +50,19 @@ struct HostFileRequest: Codable {
               request.directory.isFileURL, request.sources.allSatisfy(\.isFileURL) else { throw HostRequestError.invalidOrExpired }
         if let identifier = request.terminalBundleIdentifier {
             guard request.action == .openTerminal, TerminalApplication(rawValue: identifier) != nil else { throw HostRequestError.invalidOrExpired }
+        }
+        if request.archiveFormat != nil {
+            guard request.action == .createArchive else { throw HostRequestError.invalidOrExpired }
+        }
+        if request.extractIntoNewFolder != nil {
+            guard request.action == .extractArchive else { throw HostRequestError.invalidOrExpired }
+        }
+        if request.action == .createArchive {
+            guard request.archiveFormat != nil, !request.sources.isEmpty else { throw HostRequestError.invalidOrExpired }
+        }
+        if request.action == .extractArchive {
+            guard request.extractIntoNewFolder != nil, !request.sources.isEmpty,
+                  request.sources.allSatisfy(ArchiveFormat.readableArchive) else { throw HostRequestError.invalidOrExpired }
         }
         return request
     }

@@ -14,6 +14,8 @@ RightKey is a macOS Finder extension that adds practical file actions for users 
 - Jump to a file or folder by entering its path from Finder's context menu.
 - Open the current Finder directory in Terminal, or choose another installed terminal: iTerm2, Ghostty, Warp, WezTerm, kitty, or Alacritty.
 - Avoid overwriting existing files by automatically selecting a numbered name.
+- Compress to ZIP, 7Z, TAR, TAR.GZ, TAR.XZ, and TAR.ZST. Single files can also be compressed as GZ, XZ, or ZST.
+- Extract ZIP, 7Z, TAR/GZ/XZ/ZST, and RAR to the current directory or a new folder.
 
 File operations are handled by the host app so the Finder extension can remain sandboxed. Cut items are removed only after a successful move; failed items remain available for retry.
 
@@ -40,7 +42,7 @@ The project currently builds with a local ad hoc signature. A signed and notariz
 
 The first operation involving Desktop, Documents, or Downloads may cause macOS to request access to that folder. Allow access when prompted. Finder extension registration and file access permissions are separate settings.
 
-If macOS warns that the developer cannot be verified, use a build signed and notarized with your own Apple Developer credentials, or follow your organization's approved Gatekeeper policy. The release workflow in this repository produces an unsigned CI artifact for development and inspection.
+If macOS warns that the developer cannot be verified, use a build signed and notarized with your own Apple Developer credentials, or follow your organization's approved Gatekeeper policy. The default release workflow uses an ad hoc signature for local execution; it is not Developer ID signed or notarized.
 
 ## Build from source
 
@@ -71,6 +73,8 @@ Template data is stored locally at `~/Library/Application Support/RightKey/Templ
 
 To choose a terminal, right-click an empty area in the destination directory and select **使用其他终端打开 → iTerm2** (or another installed terminal). **在终端打开** continues to use macOS Terminal. The submenu appears only when another supported terminal is installed; its choices refresh whenever the menu opens. Right-clicking a folder opens that folder, while right-clicking a file uses its parent directory. See [terminal support](docs/terminals.md) for details.
 
+Select files or folders and choose **压缩为 → ZIP / 7Z / TAR / TAR.GZ / TAR.XZ / TAR.ZST**. The GZ/XZ/ZST single-file choices are enabled for one regular file; use the TAR combinations for folders or multiple files. Archives are created alongside the selection and the originals are kept. Select one or more archives and choose **解压到此处** or **解压到新建文件夹**. A progress window lets you cancel; existing files are kept under their original names, and new results receive numbered names on collision. All engines are bundled or provided by macOS, with no Homebrew requirement.
+
 ## Testing
 
 Run the focused regression suites from the repository root:
@@ -78,9 +82,12 @@ Run the focused regression suites from the repository root:
 ```sh
 /bin/zsh scripts/test_file_actions.sh
 /bin/zsh scripts/test_templates.sh
+/bin/zsh scripts/test_archives.sh
 ```
 
 The file-action suite covers native clipboard handling, copy and move operations, collisions, partial failures, directory recursion, request validation, terminal detection, and safe directory transport. The template suite covers built-in templates, validation, persistence, binary imports, and concurrent creation.
+
+The archive suite verifies all creation formats, raw streams, RAR4/RAR5 fixtures, literal paths and filenames, collisions, safe links, traversal rejection, corrupt/encrypted/empty archives, batch failures, and cancellation. To test a packaged engine, pass its resources directory: `scripts/test_archives.sh /Applications/RightKey.app/Contents/Resources`.
 
 ## Architecture
 
@@ -94,6 +101,8 @@ The file-action suite covers native clipboard handling, copy and move operations
 - This project does not replace Finder's system clipboard shortcuts.
 - The default CI artifact is not Apple Developer ID signed or notarized.
 - File access is subject to macOS permissions and the capabilities of the selected volume or file system.
+- RAR is extraction-only. Archive encryption and multi-volume archives are not supported in this first version.
+- Archive extraction checks paths before writing and uses a temporary directory; existing destination items receive numbered names instead of being overwritten.
 
 ## Contributing
 
@@ -106,3 +115,5 @@ See [SECURITY.md](SECURITY.md) for responsible disclosure guidance.
 ## License
 
 RightKey is released under the MIT License. See [LICENSE](LICENSE).
+
+The app bundles the official 7-Zip runtime and a universal zstd runtime. Their licenses and upstream source links are included in [third-party notices](docs/third-party.md).

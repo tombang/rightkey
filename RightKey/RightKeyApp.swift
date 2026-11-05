@@ -136,7 +136,8 @@ final class RightKeyAppDelegate: NSObject, NSApplicationDelegate, NSWindowDelega
                 if URLComponents(url: url, resolvingAgainstBaseURL: false)?.host == "file-action" {
                     try await handleFileAction(HostFileRequest.consume(url))
                 } else { try handleTemplate(url) }
-            } catch { showError(error.localizedDescription) }
+            } catch ArchiveError.cancelled { logger.notice("Archive operation cancelled") }
+            catch { showError(error.localizedDescription) }
         }
     }
 
@@ -176,6 +177,28 @@ final class RightKeyAppDelegate: NSObject, NSApplicationDelegate, NSWindowDelega
             try await TerminalApplication.open(directory: request.directory, bundleIdentifier: request.terminalBundleIdentifier)
         case .jumpToFile:
             jumpToFile()
+        case .createArchive:
+            guard let format = request.archiveFormat else { throw ArchiveError.failure("未指定归档格式") }
+            let job = ArchiveJob()
+            let progress = ArchiveProgress(title: "正在压缩为 \(format.menuTitle)…", job: job)
+            progress.show()
+            defer { progress.close() }
+            let result = try await Task.detached(priority: .userInitiated) {
+                try RightKeyArchiveOperations.create(sources: request.sources, in: request.directory, format: format, job: job)
+            }.value
+            NSWorkspace.shared.activateFileViewerSelecting([result])
+        case .extractArchive:
+            guard let newFolder = request.extractIntoNewFolder else { throw ArchiveError.failure("未指定解压方式") }
+            let job = ArchiveJob()
+            let progress = ArchiveProgress(title: "正在解压 \(request.sources.count) 个压缩包…", job: job)
+            progress.show()
+            defer { progress.close() }
+            let result = try await Task.detached(priority: .userInitiated) {
+                try RightKeyArchiveOperations.extract(request.sources, into: request.directory, newFolder: newFolder, job: job)
+            }.value
+            if !result.created.isEmpty { NSWorkspace.shared.activateFileViewerSelecting(result.created) }
+            progress.close()
+            if !result.failures.isEmpty { showError(result.failures.prefix(10).joined(separator: "\n\n")) }
         }
     }
 
@@ -245,5 +268,41 @@ final class RightKeyAppDelegate: NSObject, NSApplicationDelegate, NSWindowDelega
         alert.messageText = "RightKey 操作失败"
         alert.informativeText = message
         alert.runModal()
+    }
+}
+
+@MainActor
+private final class ArchiveProgress: NSObject {
+    private let panel: NSPanel
+    private let job: ArchiveJob
+
+    init(title: String, job: ArchiveJob) {
+        self.job = job
+        panel = NSPanel(contentRect: NSRect(x: 0, y: 0, width: 400, height: 130),
+                        styleMask: [.titled, .nonactivatingPanel], backing: .buffered, defer: false)
+        super.init()
+        panel.title = "RightKey"
+        panel.isReleasedWhenClosed = false
+        panel.level = .floating
+        let label = NSTextField(labelWithString: title)
+        label.frame = NSRect(x: 20, y: 88, width: 360, height: 22)
+        let indicator = NSProgressIndicator(frame: NSRect(x: 20, y: 62, width: 360, height: 14))
+        indicator.style = .bar
+        indicator.isIndeterminate = true
+        indicator.startAnimation(nil)
+        let cancel = NSButton(title: "取消", target: self, action: #selector(cancelOperation(_:)))
+        cancel.frame = NSRect(x: 296, y: 16, width: 84, height: 30)
+        panel.contentView?.addSubview(label)
+        panel.contentView?.addSubview(indicator)
+        panel.contentView?.addSubview(cancel)
+        panel.center()
+    }
+
+    func show() { panel.orderFrontRegardless() }
+    func close() { panel.close() }
+    @objc private func cancelOperation(_ sender: NSButton) {
+        sender.isEnabled = false
+        sender.title = "取消中…"
+        job.cancel()
     }
 }

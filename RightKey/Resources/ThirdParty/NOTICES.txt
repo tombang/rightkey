@@ -1,0 +1,24 @@
+RightKey third-party components
+
+7-Zip 26.05, Copyright (C) 1999-2026 Igor Pavlov.
+The unmodified universal executable ../7zz is invoked as a separate process.
+License: LGPL 2.1 or later, BSD portions and unRAR restriction.
+Full notice: ../7zz-License.txt. LGPL text: 7zip-LGPL.txt.
+Complete corresponding source: 7z2605-src.tar.xz (included here).
+Upstream: https://github.com/ip7z/7zip/releases/tag/26.05
+The RAR decompression code may not be used to develop a RAR-compatible archiver.
+RightKey does not offer RAR compression. Users may replace the standalone
+executable with a compatible modified version.
+
+Zstandard 1.5.7, Copyright (c) Meta Platforms, Inc. and affiliates.
+License: BSD 3-clause, reproduced in zstd-LICENSE.
+Complete source: zstd-1.5.7.tar.gz (included here).
+Upstream: https://github.com/facebook/zstd/releases/tag/v1.5.7
+Universal build instructions: extract source, then run:
+make -C programs zstd-release CC=clang \
+ CFLAGS='-O2 -arch arm64 -arch x86_64 -mmacosx-version-min=13.0' \
+ LDFLAGS='-arch arm64 -arch x86_64 -mmacosx-version-min=13.0' \
+ HAVE_ZLIB=0 HAVE_LZMA=0 HAVE_LZ4=0
+codesign --force --sign - programs/zstd
+
+macOS supplies /usr/bin/bsdtar and libarchive; neither is redistributed here.

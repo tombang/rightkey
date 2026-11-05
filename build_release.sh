@@ -5,6 +5,8 @@ ROOT_DIR="$(cd "$(dirname "$0")" && pwd)"
 DERIVED_DATA="$ROOT_DIR/.build/DerivedData"
 DIST_DIR="$ROOT_DIR/dist"
 
+(cd "$ROOT_DIR" && shasum -a 256 -c RightKey/Resources/ThirdParty/SHA256SUMS)
+
 rm -rf "$DERIVED_DATA"
 mkdir -p "$DIST_DIR"
 
@@ -19,6 +21,12 @@ xcodebuild \
 
 APP_PATH="$DERIVED_DATA/Build/Products/Release/RightKey.app"
 test -d "$APP_PATH"
+for binary in "$APP_PATH/Contents/MacOS/RightKey" \
+  "$APP_PATH/Contents/PlugIns/RightKeyFinderSync.appex/Contents/MacOS/RightKeyFinderSync" \
+  "$APP_PATH/Contents/Resources/7zz" "$APP_PATH/Contents/Resources/zstd"; do
+  lipo "$binary" -verify_arch arm64 x86_64
+  codesign --verify --strict "$binary"
+done
 codesign --verify --deep --strict "$APP_PATH"
 
 ENTITLEMENTS="$DIST_DIR/extension-entitlements.plist"

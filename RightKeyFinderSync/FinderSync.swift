@@ -12,6 +12,7 @@ final class FinderSync: FIFinderSync {
 
     override func menu(for menuKind: FIMenuKind) -> NSMenu? {
         let menu = NSMenu(title: "RightKey")
+        menu.autoenablesItems = false
         let selected = selectedURLs()
         let container = menuKind == .contextualMenuForContainer
         let contextTag = Int(menuKind.rawValue)
@@ -37,6 +38,25 @@ final class FinderSync: FIFinderSync {
             menu.addItem(item("复制", action: #selector(copyItems)))
             menu.addItem(item("剪切", action: #selector(cutItems)))
             menu.addItem(item("复制路径", action: #selector(copyPaths)))
+            menu.addItem(.separator())
+
+            let compress = NSMenu(title: "压缩为")
+            compress.autoenablesItems = false
+            for (index, format) in ArchiveFormat.allCases.enumerated() {
+                let entry = item(format.menuTitle, action: #selector(createArchive), tag: 300 + index)
+                entry.isEnabled = !format.requiresSingleFile || (selected.count == 1 &&
+                    (try? selected[0].resourceValues(forKeys: [.isRegularFileKey]).isRegularFile) == true &&
+                    (try? selected[0].resourceValues(forKeys: [.isSymbolicLinkKey]).isSymbolicLink) != true)
+                compress.addItem(entry)
+            }
+            let compressParent = NSMenuItem(title: "压缩为", action: nil, keyEquivalent: "")
+            compressParent.submenu = compress
+            menu.addItem(compressParent)
+
+            if selected.allSatisfy({ ArchiveFormat.readableArchive($0) && !isDirectory($0) }) {
+                menu.addItem(item("解压到此处", action: #selector(extractArchive), tag: 400))
+                menu.addItem(item("解压到新建文件夹", action: #selector(extractArchive), tag: 401))
+            }
             menu.addItem(.separator())
         }
 
@@ -91,6 +111,21 @@ final class FinderSync: FIFinderSync {
         runAction { try sendSelection(.copyPaths) }
     }
 
+    @objc private func createArchive(_ sender: NSMenuItem) {
+        runAction {
+            let index = sender.tag - 300
+            guard ArchiveFormat.allCases.indices.contains(index) else { throw ArchiveError.failure("未知归档格式") }
+            try sendSelection(.createArchive, archiveFormat: ArchiveFormat.allCases[index])
+        }
+    }
+
+    @objc private func extractArchive(_ sender: NSMenuItem) {
+        runAction {
+            guard sender.tag == 400 || sender.tag == 401 else { throw ArchiveError.failure("未知解压方式") }
+            try sendSelection(.extractArchive, extractIntoNewFolder: sender.tag == 401)
+        }
+    }
+
     @objc private func pasteItems(_ sender: NSMenuItem) {
         NSLog("RightKey: paste callback")
         runAction {
@@ -134,12 +169,13 @@ final class FinderSync: FIFinderSync {
         openHost(try request.publish())
     }
 
-    private func sendSelection(_ action: HostFileRequest.Action) throws {
+    private func sendSelection(_ action: HostFileRequest.Action, archiveFormat: ArchiveFormat? = nil, extractIntoNewFolder: Bool? = nil) throws {
         let urls = selectedURLs()
         guard let first = urls.first else { throw ClipboardError.noFiles }
         // URLs travel as JSON data. The unsandboxed host writes public.file-url
         // so macOS can attach the access grants required by other applications.
-        try sendToHost(HostFileRequest(action: action, directory: first.deletingLastPathComponent(), sources: urls))
+        try sendToHost(HostFileRequest(action: action, directory: first.deletingLastPathComponent(), sources: urls,
+                                       archiveFormat: archiveFormat, extractIntoNewFolder: extractIntoNewFolder))
     }
 
     private func openHost(_ url: URL) {
