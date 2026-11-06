@@ -3,6 +3,10 @@ import FinderSync
 
 final class FinderSync: FIFinderSync {
     private let controller = FIFinderSyncController.default()
+    /// Finder preserves only the integer tag. Map it back to the mark id captured
+    /// while this menu was built; user-defined ids cannot be packed into the tag.
+    private var markTags: [Int: String] = [:]
+    private var nextMarkTag = 7_000
 
     override init() {
         super.init()
@@ -75,6 +79,7 @@ final class FinderSync: FIFinderSync {
         }
         menu.addItem(.separator())
         menu.addItem(item("跳转到文件…", action: #selector(jumpToFile)))
+        appendMarksMenu(to: menu, contextTag: contextTag)
         menu.addItem(.separator())
         menu.addItem(item("在终端打开", action: #selector(openInTerminal),
                           tag: TerminalMenuSelection(terminal: .terminal, contextTag: contextTag).menuTag))
@@ -148,6 +153,52 @@ final class FinderSync: FIFinderSync {
         runAction {
             try sendToHost(HostFileRequest(action: .jumpToFile, directory: URL(fileURLWithPath: "/")))
         }
+    }
+
+    @objc private func openMark(_ sender: NSMenuItem) {
+        runAction {
+            guard let id = markTags[sender.tag] else { throw DirectoryMarkError.missingMark }
+            try sendToHost(HostFileRequest(action: .openMark, directory: URL(fileURLWithPath: "/"), markID: id))
+        }
+    }
+
+    @objc private func markDirectory(_ sender: NSMenuItem) {
+        runAction {
+            try sendToHost(HostFileRequest(action: .createMark, directory: destinationDirectory(contextTag: sender.tag)))
+        }
+    }
+
+    @objc private func manageMarks(_ sender: NSMenuItem) {
+        runAction {
+            try sendToHost(HostFileRequest(action: .manageMarks, directory: URL(fileURLWithPath: "/")))
+        }
+    }
+
+    private func appendMarksMenu(to menu: NSMenu, contextTag: Int) {
+        let submenu = NSMenu(title: "标记的目录")
+        submenu.autoenablesItems = false
+        switch DirectoryMarkStore().catalog() {
+        case .ready(let marks):
+            for (mark, title) in zip(marks, DirectoryMarks.menuTitles(for: marks)) {
+                let tag = nextMarkTag
+                nextMarkTag += 1
+                markTags[tag] = mark.id
+                let entry = item(title, action: #selector(openMark(_:)), tag: tag)
+                entry.toolTip = mark.path
+                submenu.addItem(entry)
+            }
+            if !marks.isEmpty { submenu.addItem(.separator()) }
+        case .unreadable:
+            let unavailable = item("标记暂时不可用", action: #selector(openMark(_:)))
+            unavailable.isEnabled = false
+            submenu.addItem(unavailable)
+            submenu.addItem(.separator())
+        }
+        submenu.addItem(item("标记当前目录…", action: #selector(markDirectory(_:)), tag: contextTag))
+        submenu.addItem(item("管理标记…", action: #selector(manageMarks(_:))))
+        let parent = NSMenuItem(title: submenu.title, action: nil, keyEquivalent: "")
+        parent.submenu = submenu
+        menu.addItem(parent)
     }
 
     @objc private func newFromTemplate(_ sender: NSMenuItem) {

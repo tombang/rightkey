@@ -37,6 +37,9 @@
 		A10000000000000000000028 /* ArchiveValidation.c in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000024; };
 		A10000000000000000000029 /* zstd in Resources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000025; };
 		A10000000000000000000030 /* ThirdParty in Resources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000026; };
+		A10000000000000000000031 /* DirectoryMarks.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000027 /* DirectoryMarks.swift */; };
+		A10000000000000000000032 /* DirectoryMarks.swift in FinderSync Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000027 /* DirectoryMarks.swift */; };
+		A10000000000000000000033 /* DirectoryMarkLibrary.swift in Sources */ = {isa = PBXBuildFile; fileRef = A20000000000000000000028 /* DirectoryMarkLibrary.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -80,6 +83,8 @@
 		A20000000000000000000024 /* ArchiveValidation.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = RightKey/ArchiveSupport/ArchiveValidation.c; sourceTree = SOURCE_ROOT; };
 		A20000000000000000000025 /* zstd */ = {isa = PBXFileReference; lastKnownFileType = file; path = zstd; sourceTree = "<group>"; };
 		A20000000000000000000026 /* ThirdParty */ = {isa = PBXFileReference; lastKnownFileType = folder; path = ThirdParty; sourceTree = "<group>"; };
+		A20000000000000000000027 /* DirectoryMarks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectoryMarks.swift; sourceTree = "<group>"; };
+		A20000000000000000000028 /* DirectoryMarkLibrary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DirectoryMarkLibrary.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -89,10 +94,10 @@
 
 /* Begin PBXGroup section */
 		A40000000000000000000001 = {isa = PBXGroup; children = (A40000000000000000000002 /* RightKey */, A40000000000000000000003 /* RightKeyFinderSync */, A40000000000000000000004 /* Products */); sourceTree = "<group>"; };
-		A40000000000000000000002 /* RightKey */ = {isa = PBXGroup; children = (A20000000000000000000001 /* RightKeyApp.swift */, A20000000000000000000002 /* ContentView.swift */, A20000000000000000000014 /* TemplateLibrary.swift */, A20000000000000000000015 /* TemplateCreationDialog.swift */, A40000000000000000000005 /* Shared */, A40000000000000000000006 /* RightKey Resources */, A20000000000000000000017 /* Assets.xcassets */, A20000000000000000000010 /* RightKey Info.plist */); path = RightKey; sourceTree = "<group>"; };
+		A40000000000000000000002 /* RightKey */ = {isa = PBXGroup; children = (A20000000000000000000001 /* RightKeyApp.swift */, A20000000000000000000002 /* ContentView.swift */, A20000000000000000000014 /* TemplateLibrary.swift */, A20000000000000000000015 /* TemplateCreationDialog.swift */, A20000000000000000000028 /* DirectoryMarkLibrary.swift */, A40000000000000000000005 /* Shared */, A40000000000000000000006 /* RightKey Resources */, A20000000000000000000017 /* Assets.xcassets */, A20000000000000000000010 /* RightKey Info.plist */); path = RightKey; sourceTree = "<group>"; };
 		A40000000000000000000003 /* RightKeyFinderSync */ = {isa = PBXGroup; children = (A20000000000000000000005 /* FinderSync.swift */, A40000000000000000000007 /* FinderSync Resources */, A20000000000000000000008 /* RightKeyFinderSync Info.plist */); path = RightKeyFinderSync; sourceTree = "<group>"; };
 		A40000000000000000000004 /* Products */ = {isa = PBXGroup; children = (A20000000000000000000007 /* RightKey.app */, A20000000000000000000009 /* RightKeyFinderSync.appex */); name = Products; sourceTree = "<group>"; };
-		A40000000000000000000005 /* Shared */ = {isa = PBXGroup; children = (A20000000000000000000003 /* FileClipboard.swift */, A20000000000000000000004 /* FileOperations.swift */, A20000000000000000000013 /* FileTemplates.swift */, A20000000000000000000016 /* HostFileRequest.swift */, A20000000000000000000018 /* TerminalApplication.swift */, A20000000000000000000019 /* PathJump.swift */, A20000000000000000000020 /* ArchiveFormat.swift */, A20000000000000000000021 /* ArchiveOperations.swift */); path = Shared; sourceTree = "<group>"; };
+		A40000000000000000000005 /* Shared */ = {isa = PBXGroup; children = (A20000000000000000000003 /* FileClipboard.swift */, A20000000000000000000004 /* FileOperations.swift */, A20000000000000000000013 /* FileTemplates.swift */, A20000000000000000000016 /* HostFileRequest.swift */, A20000000000000000000018 /* TerminalApplication.swift */, A20000000000000000000019 /* PathJump.swift */, A20000000000000000000020 /* ArchiveFormat.swift */, A20000000000000000000021 /* ArchiveOperations.swift */, A20000000000000000000027 /* DirectoryMarks.swift */); path = Shared; sourceTree = "<group>"; };
 		A40000000000000000000006 /* RightKey Resources */ = {isa = PBXGroup; children = (A20000000000000000000011 /* RightKey Keep.txt */, A20000000000000000000022 /* 7zz */, A20000000000000000000023 /* 7zz-License.txt */, A20000000000000000000025 /* zstd */, A20000000000000000000026 /* ThirdParty */); path = Resources; sourceTree = "<group>"; };
 		A40000000000000000000007 /* FinderSync Resources */ = {isa = PBXGroup; children = (A20000000000000000000012 /* FinderSync Keep.txt */); path = Resources; sourceTree = "<group>"; };
 /* End PBXGroup section */
@@ -125,8 +130,8 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
-		A30000000000000000000004 /* RightKey Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (A10000000000000000000001 /* RightKeyApp.swift in Sources */, A10000000000000000000002 /* ContentView.swift in Sources */, A10000000000000000000003 /* FileClipboard.swift in Sources */, A10000000000000000000004 /* FileOperations.swift in Sources */, A10000000000000000000012, A10000000000000000000014, A10000000000000000000015, A10000000000000000000016, A10000000000000000000019, A10000000000000000000021, A10000000000000000000023 /* ArchiveFormat.swift in Sources */, A10000000000000000000025 /* ArchiveOperations.swift in Sources */, A10000000000000000000028); runOnlyForDeploymentPostprocessing = 0; };
-		A30000000000000000000006 /* FinderSync Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (A10000000000000000000005 /* FinderSync.swift in Sources */, A10000000000000000000007 /* FileClipboard.swift in FinderSync Sources */, A10000000000000000000008 /* FileOperations.swift in FinderSync Sources */, A10000000000000000000013, A10000000000000000000017, A10000000000000000000020, A10000000000000000000022, A10000000000000000000024 /* ArchiveFormat.swift in FinderSync Sources */); runOnlyForDeploymentPostprocessing = 0; };
+		A30000000000000000000004 /* RightKey Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (A10000000000000000000001 /* RightKeyApp.swift in Sources */, A10000000000000000000002 /* ContentView.swift in Sources */, A10000000000000000000003 /* FileClipboard.swift in Sources */, A10000000000000000000004 /* FileOperations.swift in Sources */, A10000000000000000000012, A10000000000000000000014, A10000000000000000000015, A10000000000000000000016, A10000000000000000000019, A10000000000000000000021, A10000000000000000000023 /* ArchiveFormat.swift in Sources */, A10000000000000000000025 /* ArchiveOperations.swift in Sources */, A10000000000000000000028, A10000000000000000000031 /* DirectoryMarks.swift in Sources */, A10000000000000000000033 /* DirectoryMarkLibrary.swift in Sources */); runOnlyForDeploymentPostprocessing = 0; };
+		A30000000000000000000006 /* FinderSync Sources */ = {isa = PBXSourcesBuildPhase; buildActionMask = 2147483647; files = (A10000000000000000000005 /* FinderSync.swift in Sources */, A10000000000000000000007 /* FileClipboard.swift in FinderSync Sources */, A10000000000000000000008 /* FileOperations.swift in FinderSync Sources */, A10000000000000000000013, A10000000000000000000017, A10000000000000000000020, A10000000000000000000022, A10000000000000000000024 /* ArchiveFormat.swift in FinderSync Sources */, A10000000000000000000032 /* DirectoryMarks.swift in FinderSync Sources */); runOnlyForDeploymentPostprocessing = 0; };
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */

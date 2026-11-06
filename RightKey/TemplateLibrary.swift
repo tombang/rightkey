@@ -4,7 +4,6 @@ import AppKit
 @MainActor
 final class TemplateLibrary: ObservableObject {
     @Published private(set) var custom: [FileTemplate] = []
-    @Published var showTemplates = false
     @Published var errorMessage: String?
     private let storage = TemplateStorage()
     private var canSave = true

@@ -4,14 +4,18 @@ import FinderSync
 
 struct ContentView: View {
     @ObservedObject var library: TemplateLibrary
+    @ObservedObject var marks: DirectoryMarkLibrary
+    @ObservedObject var navigation: SettingsNavigation
     @State private var extensionEnabled = false
 
     var body: some View {
         VStack(spacing: 0) {
-            TabView(selection: $library.showTemplates) {
-                setupView.tabItem { Label("使用与设置", systemImage: "gearshape") }.tag(false)
+            TabView(selection: $navigation.tab) {
+                setupView.tabItem { Label("使用与设置", systemImage: "gearshape") }.tag(SettingsTab.setup)
                 TemplateManagerView(library: library)
-                    .tabItem { Label("文件模板", systemImage: "doc.badge.plus") }.tag(true)
+                    .tabItem { Label("文件模板", systemImage: "doc.badge.plus") }.tag(SettingsTab.templates)
+                DirectoryMarkManagerView(library: marks)
+                    .tabItem { Label("目录标记", systemImage: "bookmark") }.tag(SettingsTab.marks)
             }
             Divider()
             HStack {
@@ -28,6 +32,9 @@ struct ContentView: View {
         .alert("模板操作失败", isPresented: Binding(get: { library.errorMessage != nil }, set: { if !$0 { library.errorMessage = nil } })) {
             Button("好") { library.errorMessage = nil }
         } message: { Text(library.errorMessage ?? "") }
+        .alert("目录标记失败", isPresented: Binding(get: { marks.errorMessage != nil }, set: { if !$0 { marks.errorMessage = nil } })) {
+            Button("好") { marks.errorMessage = nil }
+        } message: { Text(marks.errorMessage ?? "") }
         .onAppear { refreshExtensionState() }
         .onReceive(NotificationCenter.default.publisher(for: NSApplication.didBecomeActiveNotification)) { _ in
             refreshExtensionState()
@@ -45,11 +52,15 @@ struct ContentView: View {
                 Label("新建文件夹、从内置或自定义模板新建文件", systemImage: "folder.badge.plus")
                 Label("复制、剪切、粘贴和移动文件/文件夹", systemImage: "doc.on.doc")
                 Label("复制完整路径、选择已安装的终端打开当前目录", systemImage: "terminal")
+                Label("标记最多 20 个目录，并从任意位置跳转过去", systemImage: "bookmark")
                 Label("压缩 ZIP、7Z、TAR/GZ/XZ/ZST，解压 RAR 等常见格式", systemImage: "archivebox")
             }
             .padding(.vertical, 4)
 
-            Button("管理文件模板") { library.showTemplates = true }
+            HStack {
+                Button("管理文件模板") { navigation.tab = .templates }
+                Button("管理目录标记") { navigation.tab = .marks }
+            }
 
             Divider()
 

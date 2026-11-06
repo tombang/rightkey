@@ -1,7 +1,7 @@
 import AppKit
 
 struct HostFileRequest: Codable {
-    enum Action: String, Codable { case copy, cut, copyPaths, paste, createFolder, openTerminal, jumpToFile, createArchive, extractArchive }
+    enum Action: String, Codable { case copy, cut, copyPaths, paste, createFolder, openTerminal, jumpToFile, createArchive, extractArchive, openMark, createMark, manageMarks }
     let action: Action
     let directory: URL
     var clipboardChangeCount: Int?
@@ -10,11 +10,12 @@ struct HostFileRequest: Codable {
     var terminalBundleIdentifier: String?
     var archiveFormat: ArchiveFormat?
     var extractIntoNewFolder: Bool?
+    var markID: String?
     private var createdAt = Date()
 
     private static let dataType = NSPasteboard.PasteboardType("com.rightkey.file-request")
 
-    init(action: Action, directory: URL, clipboardChangeCount: Int? = nil, clipboardCutting: Bool? = nil, sources: [URL] = [], terminalBundleIdentifier: String? = nil, archiveFormat: ArchiveFormat? = nil, extractIntoNewFolder: Bool? = nil) {
+    init(action: Action, directory: URL, clipboardChangeCount: Int? = nil, clipboardCutting: Bool? = nil, sources: [URL] = [], terminalBundleIdentifier: String? = nil, archiveFormat: ArchiveFormat? = nil, extractIntoNewFolder: Bool? = nil, markID: String? = nil) {
         self.action = action
         self.directory = directory
         self.clipboardChangeCount = clipboardChangeCount
@@ -23,6 +24,7 @@ struct HostFileRequest: Codable {
         self.terminalBundleIdentifier = terminalBundleIdentifier
         self.archiveFormat = archiveFormat
         self.extractIntoNewFolder = extractIntoNewFolder
+        self.markID = markID
     }
 
     /// One-use tokens keep raw paths out of URLs and prevent a webpage from
@@ -64,6 +66,10 @@ struct HostFileRequest: Codable {
             guard request.extractIntoNewFolder != nil, !request.sources.isEmpty,
                   request.sources.allSatisfy(ArchiveFormat.readableArchive) else { throw HostRequestError.invalidOrExpired }
         }
+        if let markID = request.markID {
+            guard request.action == .openMark, markID.count == 36, UUID(uuidString: markID) != nil else { throw HostRequestError.invalidOrExpired }
+        }
+        if request.action == .openMark, request.markID == nil { throw HostRequestError.invalidOrExpired }
         return request
     }
 }

@@ -12,6 +12,7 @@ RightKey is a macOS Finder extension that adds practical file actions for users 
 - Move files by choosing **剪切** and then **粘贴（移动剪切项）** in the destination folder.
 - Copy one or more absolute file paths.
 - Jump to a file or folder by entering its path from Finder's context menu.
+- Mark up to 20 directories and jump to one from any Finder context menu.
 - Open the current Finder directory in Terminal, or choose another installed terminal: iTerm2, Ghostty, Warp, WezTerm, kitty, or Alacritty.
 - Avoid overwriting existing files by automatically selecting a numbered name.
 - Compress to ZIP, 7Z, TAR, TAR.GZ, TAR.XZ, and TAR.ZST. Single files can also be compressed as GZ, XZ, or ZST.
@@ -69,6 +70,9 @@ Finder's native **复制**, **粘贴项目**, and **⌘V** remain available. Use
 
 Choose **跳转到文件…** to enter an absolute path or a path beginning with `~`. A folder opens in Finder; a file is selected in its containing folder. Paths are checked locally before Finder is changed.
 
+Choose **标记的目录 → 标记当前目录…** to save the folder you are in. Right-click anywhere else and choose that mark to open it again. A mark stores the path, not a file identity: if the folder is deleted, renamed, or moved, the mark stays and the click explains that the original location is gone. You can keep or remove it. An unmounted disk is not treated as deletion, and its mark is kept. RightKey does not search for another directory with the same name. The list holds at most 20 marks and is saved only on this Mac at `~/Library/Application Support/RightKey/DirectoryMarks.json`.
+
+
 Template data is stored locally at `~/Library/Application Support/RightKey/Templates.json`. It is not included in source archives or release artifacts.
 
 To choose a terminal, right-click an empty area in the destination directory and select **使用其他终端打开 → iTerm2** (or another installed terminal). **在终端打开** continues to use macOS Terminal. The submenu appears only when another supported terminal is installed; its choices refresh whenever the menu opens. Right-clicking a folder opens that folder, while right-clicking a file uses its parent directory. See [terminal support](docs/terminals.md) for details.
@@ -83,6 +87,7 @@ Run the focused regression suites from the repository root:
 /bin/zsh scripts/test_file_actions.sh
 /bin/zsh scripts/test_templates.sh
 /bin/zsh scripts/test_archives.sh
+/bin/zsh scripts/test_marks.sh
 ```
 
 The file-action suite covers native clipboard handling, copy and move operations, collisions, partial failures, directory recursion, request validation, terminal detection, and safe directory transport. The template suite covers built-in templates, validation, persistence, binary imports, and concurrent creation.
@@ -103,6 +108,8 @@ The archive suite verifies all creation formats, raw streams, RAR4/RAR5 fixtures
 - File access is subject to macOS permissions and the capabilities of the selected volume or file system.
 - RAR is extraction-only. Archive encryption and multi-volume archives are not supported in this first version.
 - Archive extraction checks paths before writing and uses a temporary directory; existing destination items receive numbered names instead of being overwritten.
+- Directory marks are limited to 20 and follow the saved path. They are not updated when a folder is renamed or moved, and they are not removed automatically when that path disappears.
+
 
 ## Contributing
 

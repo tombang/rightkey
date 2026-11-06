@@ -116,6 +116,8 @@
         notify("实际使用时可选择已安装的终端，或输入路径直接跳转到文件和文件夹。");
       if (action === "archive")
         notify("压缩格式：ZIP、7Z、TAR.GZ、TAR.XZ、TAR.ZST；选中压缩包后也可以解压到此处。");
+      if (action === "marks")
+        notify("可标记最多 20 个目录。在其他文件夹右键即可跳转；目录删除后标记会保留并提示。此演示不保存标记。");
     });
   });
   function uniqueNoteName() {

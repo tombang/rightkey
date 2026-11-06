@@ -7,7 +7,7 @@
     <title>RightKey — 让 Mac 的每一次右键，都更顺手</title>
     <meta
       name="description"
-      content="RightKey 是免费开源的 macOS Finder 右键菜单扩展。新建文件、模板、复制、剪切、粘贴、压缩解压、复制路径、终端打开，让文件操作更顺手。支持 Apple Silicon 和 Intel Mac。"
+      content="RightKey 是免费开源的 macOS Finder 右键菜单扩展。新建文件、模板、复制、剪切、粘贴、压缩解压、复制路径、目录标记、终端打开，让文件操作更顺手。支持 Apple Silicon 和 Intel Mac。"
     />
     <link rel="canonical" href="https://rightkey.bot.cd/" />
     <meta property="og:type" content="website" />
@@ -157,6 +157,8 @@
                   <hr />
                   <button type="button" data-demo="path">
                     <span class="menu-icon">↗</span>复制路径</button
+                  ><button type="button" data-demo="marks">
+                    <span class="menu-icon">☆</span>标记的目录</button
                   ><button type="button" data-demo="terminal">
                     <span class="menu-icon terminal-symbol">&gt;_</span
                     >在终端打开
@@ -291,6 +293,16 @@
               <span>ZIP</span><span>7Z</span><span>RAR</span><span>TAR</span
               ><span>ZST</span>
             </div>
+          </article>
+          <article class="feature-card">
+            <div class="card-top">
+              <span class="card-icon">☆</span
+              ><span class="card-number">06 / MARKS</span>
+            </div>
+            <h3>常用目录，右键即达。</h3>
+            <p>
+              标记最多 20 个文件夹。之后在任何位置右键，都能直接跳过去。目录删除或磁盘未连接时，标记会保留并说明原因。
+            </p>
           </article>
         </div>
       </section>
@@ -483,6 +495,12 @@
               的文件操作与模板存储都在本机完成，无需注册账户。自定义模板保存在
               ~/Library/Application
               Support/RightKey/Templates.json，不会包含在应用发布包中。
+            </p>
+          </details>
+          <details>
+            <summary>标记的目录被删除了怎么办？</summary>
+            <p>
+              标记不会自动消失。点击时如果原来的位置已经不存在，可以选择保留或移除。外置磁盘没有连接时不算删除，标记会留着。标记认的是原来的路径，不会按同名目录另找一个。
             </p>
           </details>
           <details>

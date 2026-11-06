@@ -32,6 +32,7 @@ codesign --verify --deep --strict "$APP_PATH"
 ENTITLEMENTS="$DIST_DIR/extension-entitlements.plist"
 codesign -d --entitlements - --xml "$APP_PATH/Contents/PlugIns/RightKeyFinderSync.appex" > "$ENTITLEMENTS" 2>/dev/null
 test "$(/usr/libexec/PlistBuddy -c 'Print :com.apple.security.app-sandbox' "$ENTITLEMENTS")" = true
+test "$(/usr/libexec/PlistBuddy -c 'Print :com.apple.security.temporary-exception.files.home-relative-path.read-only:0' "$ENTITLEMENTS")" = "/Library/Application Support/RightKey/DirectoryMarks.json"
 
 APP_VERSION="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP_PATH/Contents/Info.plist")"
 ZIP_PATH="$DIST_DIR/RightKey-$APP_VERSION.zip"

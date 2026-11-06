@@ -20,6 +20,8 @@ enum RightKeyApp {
 @MainActor
 final class RightKeyAppDelegate: NSObject, NSApplicationDelegate, NSWindowDelegate {
     let templates = TemplateLibrary()
+    let directoryMarks = DirectoryMarkLibrary()
+    let navigation = SettingsNavigation()
     private var mainWindow: NSWindowController?
     private let logger = Logger(subsystem: "com.rightkey.app", category: "Lifecycle")
     private var requests: [URL] = []
@@ -70,13 +72,13 @@ final class RightKeyAppDelegate: NSObject, NSApplicationDelegate, NSWindowDelega
     }
 
     @objc private func showSettings(_ sender: Any?) {
-        templates.showTemplates = false
+        navigation.tab = .setup
         showMainWindow()
     }
 
     private func showMainWindow() {
         if mainWindow == nil {
-            let window = NSWindow(contentViewController: NSHostingController(rootView: ContentView(library: templates)))
+            let window = NSWindow(contentViewController: NSHostingController(rootView: ContentView(library: templates, marks: directoryMarks, navigation: navigation)))
             window.title = "RightKey"
             window.styleMask = [.titled, .closable, .miniaturizable]
             window.isReleasedWhenClosed = false
@@ -177,6 +179,14 @@ final class RightKeyAppDelegate: NSObject, NSApplicationDelegate, NSWindowDelega
             try await TerminalApplication.open(directory: request.directory, bundleIdentifier: request.terminalBundleIdentifier)
         case .jumpToFile:
             jumpToFile()
+        case .openMark:
+            guard let id = request.markID else { throw DirectoryMarkError.missingMark }
+            try openDirectoryMark(id)
+        case .createMark:
+            try createDirectoryMark(in: request.directory)
+        case .manageMarks:
+            navigation.tab = .marks
+            showMainWindow()
         case .createArchive:
             guard let format = request.archiveFormat else { throw ArchiveError.failure("未指定归档格式") }
             let job = ArchiveJob()
@@ -239,14 +249,14 @@ final class RightKeyAppDelegate: NSObject, NSApplicationDelegate, NSWindowDelega
         NSApp.activate(ignoringOtherApps: true)
         switch try TemplateRequest(url: url) {
         case .manage:
-            templates.showTemplates = true
+            navigation.tab = .templates
             showMainWindow()
         case .create(let directory, let templateID):
             let choices: [FileTemplate]
             if templateID == "custom" {
                 choices = templates.custom
                 if choices.isEmpty {
-                    templates.showTemplates = true
+                    navigation.tab = .templates
                     showMainWindow()
                     let alert = NSAlert()
                     alert.messageText = "还没有自定义模板"
@@ -260,6 +270,80 @@ final class RightKeyAppDelegate: NSObject, NSApplicationDelegate, NSWindowDelega
             }
             TemplateCreationDialog(templates: choices).run(in: directory)
         }
+    }
+
+    private func openDirectoryMark(_ id: String) throws {
+        switch DirectoryMarks.jump(id: id, in: try directoryMarks.currentMarks()) {
+        case .openDirectory(let url):
+            guard NSWorkspace.shared.open(url) else { throw CocoaError(.fileReadNoPermission) }
+        case .revealFile(let url):
+            NSWorkspace.shared.activateFileViewerSelecting([url])
+        case .missing(let path):
+            confirmRemoveMissingMark(id: id, path: path)
+        case .volumeUnavailable(let volume, let path):
+            showNotice(title: "磁盘未连接", message: "「\(volume)」当前没有连接，标记已保留。\n\(path)")
+        case .unknown:
+            throw DirectoryMarkError.missingMark
+        }
+    }
+
+    private func confirmRemoveMissingMark(id: String, path: String) {
+        NSApp.activate(ignoringOtherApps: true)
+        let alert = NSAlert()
+        alert.messageText = "标记的位置已经不存在"
+        alert.informativeText = "\(path)\n\n如果只是移到废纸篓或改了名，还原或移回原路径后这个标记仍可使用。RightKey 不会按名字另找一个目录。"
+        alert.addButton(withTitle: "保留")
+        alert.addButton(withTitle: "移除标记")
+        guard alert.runModal() == .alertSecondButtonReturn else { return }
+        directoryMarks.delete(id: id)
+    }
+
+    private func createDirectoryMark(in directory: URL) throws {
+        let existing = try directoryMarks.currentMarks()
+        if DirectoryMarks.contains(directory, in: existing) {
+            showNotice(title: "已经标记过了", message: "这个目录已在「标记的目录」中，没有重复添加。")
+            return
+        }
+        if existing.count >= DirectoryMarks.maximumCount {
+            showNotice(title: "标记已满", message: DirectoryMarkError.limitReached.localizedDescription)
+            return
+        }
+        guard let name = promptForMarkName(defaultName: DirectoryMarks.defaultName(for: directory)) else { return }
+        try directoryMarks.add(directory: directory, name: name)
+    }
+
+    private func promptForMarkName(defaultName: String) -> String? {
+        NSApp.activate(ignoringOtherApps: true)
+        let alert = NSAlert()
+        alert.messageText = "标记当前目录"
+        alert.informativeText = "这个名称会出现在 Finder 的「标记的目录」菜单中。最多可以标记 20 个目录。"
+        alert.addButton(withTitle: "标记")
+        alert.addButton(withTitle: "取消")
+        let field = NSTextField(string: defaultName)
+        field.frame = NSRect(x: 0, y: 0, width: 360, height: 24)
+        field.setAccessibilityLabel("标记名称")
+        alert.accessoryView = field
+        alert.window.initialFirstResponder = field
+        while alert.runModal() == .alertFirstButtonReturn {
+            do { return try DirectoryMarks.validatedName(field.stringValue) }
+            catch {
+                let failure = NSAlert()
+                failure.messageText = "无法标记"
+                failure.informativeText = error.localizedDescription
+                failure.addButton(withTitle: "好")
+                failure.runModal()
+            }
+        }
+        return nil
+    }
+
+    private func showNotice(title: String, message: String) {
+        NSApp.activate(ignoringOtherApps: true)
+        let alert = NSAlert()
+        alert.messageText = title
+        alert.informativeText = message
+        alert.addButton(withTitle: "好")
+        alert.runModal()
     }
 
     private func showError(_ message: String) {
