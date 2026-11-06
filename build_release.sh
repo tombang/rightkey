@@ -35,12 +35,8 @@ test "$(/usr/libexec/PlistBuddy -c 'Print :com.apple.security.app-sandbox' "$ENT
 test "$(/usr/libexec/PlistBuddy -c 'Print :com.apple.security.temporary-exception.files.home-relative-path.read-only:0' "$ENTITLEMENTS")" = "/Library/Application Support/RightKey/DirectoryMarks.json"
 
 APP_VERSION="$(/usr/libexec/PlistBuddy -c 'Print :CFBundleShortVersionString' "$APP_PATH/Contents/Info.plist")"
-ZIP_PATH="$DIST_DIR/RightKey-$APP_VERSION.zip"
-ditto -c -k --sequesterRsrc --keepParent "$APP_PATH" "$ZIP_PATH"
-(
-  cd "$DIST_DIR"
-  shasum -a 256 "$(basename "$ZIP_PATH")" > "$(basename "$ZIP_PATH").sha256"
-)
+source "$ROOT_DIR/scripts/package_release.zsh"
+ZIP_PATH="$(package_rightkey_release "$APP_PATH" "$DIST_DIR" "$APP_VERSION" "$ROOT_DIR/scripts/install_rightkey.command")"
 
 echo "Created $ZIP_PATH"
 echo "Created $ZIP_PATH.sha256"

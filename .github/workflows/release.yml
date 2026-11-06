@@ -45,13 +45,18 @@ jobs:
             exit 1
           fi
 
-          mkdir -p dist
           zip_path="dist/RightKey-${app_version}.zip"
-          ditto -c -k --sequesterRsrc --keepParent "$app_path" "$zip_path"
+          test -f "$zip_path"
+          test -f "${zip_path}.sha256"
           (
             cd dist
-            shasum -a 256 "RightKey-${app_version}.zip" > "RightKey-${app_version}.zip.sha256"
+            shasum -a 256 -c "RightKey-${app_version}.zip.sha256"
           )
+          package_root="$(mktemp -d)"
+          trap 'rm -rf "$package_root"' EXIT
+          ditto -x -k "$zip_path" "$package_root"
+          test -d "$package_root/RightKey-${app_version}/RightKey.app"
+          test -x "$package_root/RightKey-${app_version}/安装 RightKey.command"
 
           printf 'RELEASE_VERSION=%s\nRELEASE_ZIP=RightKey-%s.zip\n' "$app_version" "$app_version" >> "$GITHUB_ENV"
 
@@ -86,11 +91,12 @@ jobs:
           ### Included
 
           - Universal macOS application bundle (Apple Silicon and Intel)
+          - Double-click installer that replaces an older copy and keeps local templates
           - SHA-256 checksum for the release archive
 
           ### Installation
 
-          See the repository README for Finder extension setup and macOS file access permissions.
+          Unzip the archive and double-click the file named 安装 RightKey.command. If macOS blocks it, Control-click the file and choose Open. No Terminal commands are required. See the repository README to enable the Finder extension.
           EOF
           fi
 

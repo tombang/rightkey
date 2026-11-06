@@ -27,6 +27,7 @@ Run the focused suites before opening a pull request:
 /bin/zsh scripts/test_templates.sh
 /bin/zsh scripts/test_archives.sh
 /bin/zsh scripts/test_marks.sh
+/bin/zsh scripts/test_installer.sh
 ```
 
 Changes to Finder menu behavior should also be checked manually with a local test directory. Do not use personal files or include paths, clipboard contents, templates, or signing credentials in commits or issue reports.
@@ -36,7 +37,7 @@ Changes to Finder menu behavior should also be checked manually with a local tes
 - Explain the user-visible behavior and the affected target.
 - Keep unrelated refactors out of a behavior change.
 - Add or update tests when a change affects shared file or template logic.
-- Confirm that `git diff --check` and all four test scripts pass.
+- Confirm that `git diff --check` and all five test scripts pass.
 - Do not commit `.build/`, generated archives, personal templates, or local signing material.
 
 ## Release process

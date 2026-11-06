@@ -37,9 +37,9 @@ The project currently builds with a local ad hoc signature. A signed and notariz
    shasum -a 256 -c RightKey-<version>.zip.sha256
    ```
 
-3. Unzip the archive and move `RightKey.app` to `/Applications`.
-4. Launch RightKey once. In the settings window, choose **打开 Finder 扩展设置** and enable the extension in **系统设置 → 通用 → 登录项 → 扩展 → 按 App → RightKey**.
-5. Relaunch Finder if the menu does not appear immediately: Option-click Finder in the Dock and choose **重新开启**.
+3. Unzip the archive and double-click `安装 RightKey.command`. It removes an older RightKey, installs this copy in `/Applications`, and keeps templates and directory marks. If macOS says the file cannot be opened, Control-click it and choose **Open**. No Terminal commands are required.
+4. The installer opens RightKey. In the settings window, choose **打开 Finder 扩展设置** and enable the extension in **系统设置 → 通用 → 登录项 → 扩展 → 按 App → RightKey**. Allow folder access when macOS asks.
+5. The installer relaunches Finder. If the menu is still absent, Option-click Finder in the Dock and choose **重新开启**.
 
 The first operation involving Desktop, Documents, or Downloads may cause macOS to request access to that folder. Allow access when prompted. Finder extension registration and file access permissions are separate settings.
 
@@ -51,7 +51,7 @@ If macOS warns that the developer cannot be verified, use a build signed and not
 ./build_release.sh
 ```
 
-The script builds a Release universal binary, verifies the Finder extension entitlement, and writes the following files to `dist/`:
+The script builds a Release universal binary, verifies the Finder extension entitlement, and writes a ZIP containing `RightKey.app` and `安装 RightKey.command` to `dist/`:
 
 - `RightKey-<version>.zip`
 - `RightKey-<version>.zip.sha256`
@@ -88,6 +88,7 @@ Run the focused regression suites from the repository root:
 /bin/zsh scripts/test_templates.sh
 /bin/zsh scripts/test_archives.sh
 /bin/zsh scripts/test_marks.sh
+/bin/zsh scripts/test_installer.sh
 ```
 
 The file-action suite covers native clipboard handling, copy and move operations, collisions, partial failures, directory recursion, request validation, terminal detection, and safe directory transport. The template suite covers built-in templates, validation, persistence, binary imports, and concurrent creation.
