@@ -26,6 +26,7 @@ jobs:
           set -euo pipefail
           /bin/zsh scripts/test_archives.sh
           /bin/zsh scripts/test_templates.sh
+          /bin/zsh scripts/test_marks.sh
           ./build_release.sh
 
       - name: Package and validate release
@@ -73,8 +74,11 @@ jobs:
           zip_name="RightKey-${RELEASE_VERSION}.zip"
           checksum_name="${zip_name}.sha256"
           notes_file="release-notes.md"
-
-          cat > "$notes_file" <<EOF
+          versioned_notes="docs/release-notes/${tag}.md"
+          if [[ -f "$versioned_notes" ]]; then
+            cp "$versioned_notes" "$notes_file"
+          else
+            cat > "$notes_file" <<EOF
           ## RightKey ${RELEASE_VERSION}
 
           macOS Finder extension release for RightKey.
@@ -88,6 +92,7 @@ jobs:
 
           See the repository README for Finder extension setup and macOS file access permissions.
           EOF
+          fi
 
           if gh release view "$tag" >/dev/null 2>&1; then
             while IFS=$'\t' read -r asset_name _; do
